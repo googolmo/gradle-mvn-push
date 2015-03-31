@@ -1,9 +1,30 @@
+
+def getBintrayUser() {
+    return project.hasProperty('bintray.user') ? project.getProperty('bintray.user') : ''
+}
+
+def getBintrayKey() {
+    return project.hasProperty('bintray.key') ? project.getProperty('bintray.key') : ''
+}
+
+def getBintrayGPGPassword() {
+    return project.hasProperty('bintray.gpg.password') ? project.getProperty('bintray.gpg.password') : ''
+}
+
+def getBintrayOSSUser() {
+    return project.hasProperty('bintray.oss.user') ? project.getProperty('bintray.oss.user') : ''
+}
+
+def getBintrayOSSPassword() {
+    return project.hasProperty('bintray.oss.password') ? project.getProperty('bintray.oss.password') : ''
+}
+
 install {
     repositories.mavenInstaller{
-        pom {
-            project {
+        pom.project {
                 packaging POM_PACKAGING
-                name POM_DESCRIPTION
+                name POM_NAME
+                description POM_DESCRIPTION
                 url POM_URL
 
                 licenses {
@@ -27,7 +48,6 @@ install {
                     developerConnection POM_SCM_DEV_CONNECTION
                 }
 
-            }
         }
     }
 }
@@ -64,14 +84,15 @@ android.libraryVariants.all { variant ->
 }
 
 bintray {
-    user = project.getProperty("bintray.user")
-    key = project.getProperty("bintray.key")
+    user = getBintrayUser()
+    key = getBintrayKey()
 
     configurations = ['archives']
 
     pkg {
         repo = "maven"
-        name = "material_range_bar"
+        name = rootProject.name
+        desc = POM_DESCRIPTION
         websiteUrl = POM_URL
         vcsUrl = POM_URL
         licenses = ["Apache-2.0"]
@@ -79,12 +100,12 @@ bintray {
         version {
             gpg {
                 sign = true
-                passphrase = project.getProperty("bintray.gpg.password")
+                passphrase = getBintrayGPGPassword()
             }
             mavenCentralSync {
                 sync = true
-                user = project.getProperty("bintray.oss.user")
-                password = project.getProperty("bintray.oss.password")
+                user = getBintrayOSSUser()
+                password = getBintrayOSSPassword()
                 close = '1'
             }
 
